@@ -1,0 +1,103 @@
+name: Mirror and deploy adaptambiental
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  fetch-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Install wget
+        run: sudo apt-get update && sudo apt-get install -y wget
+
+      - name: Mirror site with wget
+        run: |
+          rm -rf site
+          mkdir -p site
+          # Mirror the site into site/www.adaptambiental.com.br
+          wget --mirror --convert-links --adjust-extension --page-requisites --no-parent https://www.adaptambiental.com.br/ -P site
+
+      - name: Normalize output directory
+        run: |
+          # wget will create site/www.adaptambiental.com.br/ by hostname
+          if [ -d "site/www.adaptambiental.com.br" ]; then
+            echo "found mirrored dir"
+            PUBLISH_DIR="site/www.adaptambiental.com.br"
+          else
+            # fallback to first directory inside site/
+            PUBLISH_DIR=$(find site -maxdepth 1 -type d ! -path site -print | head -n 1)
+            PUBLISH_DIR=${PUBLISH_DIR:-site}
+          fi
+          echo "PUBLISH_DIR=${PUBLISH_DIR}"
+          ls -la "$PUBLISH_DIR"
+          echo "www.adaptambiental.com.br" > "$PUBLISH_DIR/CNAME"
+          echo "$PUBLISH_DIR" > publish_dir.txt
+
+      - name: Deploy to gh-pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ${{ steps.fetch-and-deploy.outputs.publish_dir || 'site/www.adaptambiental.com.br' }}
+          publish_branch: gh-pages
+Executar o fluxo de trabalho
+Após o commit, abra a aba Actions no repositório.
+Clique sem fluxo de trabalho "Espelhe e implante adaptambiental".
+Clique "Executar fluxo de trabalho" (workflow_dispatch). Se pedir branch, selecione main e clique Run.
+Aguarde a execução; Acompanhe OS logs funcionam. Quando terminar, a action deve criar/atualizar a branch gh-pages com os arquivos espelhados.
+Depois do deploy — configurar DNS no Registro.br
+No painel do Registro.br adicione:
+CNAME:
+Apresentador: www
+Aponta parágrafo: detaobelmok.github.io
+(Opcional, recomendado) A records para o apex (@):
+185.199.108.153
+185.199.109.153
+185.199.110.153
+185.199.111.153
+No GitHub: Settings → Pages, verifique se a fonte está setada para branch gh-pages e adicione o domínio customizado (www.adaptambiental.com.br). Habilite "Enforce HTTPS" quando o certificado for emitido.
+Possíveis problemas e como solucionar
+"Você não tem permissão para criar arquivos": significa que você (ou eu) não tem permissão de escrita; já que eu não tenho permissão para escrever no seu repo, você deve criar o arquivo manualmente (passos acima) ou me adicionar como colaborador (eu não posso aceitar convites).
+Se as Actions estiverem desabilitadas para o repo/organização: vá em Settings → Actions → General e permita Actions para o repositório (Allow all actions).
+Se o workflow falhar no wget por causa de bloqueio/JS dinâmico: me mande os logs do run e eu ajusto. Podemos usar Puppeteer no Action para renderizar JS se necessário.
+Quer que eu:
+
+a) Te guie por chamada/compartilhe prints enquanto você cria o arquivo no Web UI?
+b) Você cria o arquivo e me manda o link do commit; eu te oriento a rodar e depois verifico os logs?
+c) Prefere que eu gere um ZIP localmente e te explique como subir via Git (se quiser evitar Actions)?
+Diga qual opção prefere e eu acompanho cada passo. Se quiser, posso colar as instruções também para criar o arquivo usando Git (Git Bash / GitHub Desktop) em vez da Web UI.
+
+Crie um gerador aleatório de piadas usando uma API externa.
+Perfeito — aqui está um gerador de piadas aleatórias simples que usa uma API externa. É um site estático (HTML/CSS/JS) — basta salvar o arquivo abaixo como index.html e abrir no navegador (ou publicar em GitHub Pages).
+
+Código (salve como index.html):
+
+index.html
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Gerador de Piadas Aleatórias</title>
+Como funciona
+
+O script usa a JokeAPI (https://v2.jokeapi.dev) para buscar piadas seguras por padrão (nsfw/religious/political/sexist/racist são filtradas).
+Suporta piadas de tipo "single" e "twopart".
+Botões: Nova piada, Copiar, Compartilhar no Twitter. Toggle para mostrar NSFW (se quiser).
+Pode ser executado localmente abrindo o arquivo index.html no navegador ou hospedado em qualquer host estático (GitHub Pages, Netlify, Vercel, etc.).
+Próximos passos úteis (posso ajudar)
+
+Publicar isto direto no seu repositório GitHub Pages (eu posso gerar commit + branch gh-pages).
+Transformar em um pequeno app React/Vue se quiser mais recursos.
+Adicionar cache/localStorage para evitar chamadas repetidas.
+Substituir a fonte pela icanhazdadjoke (requer cabeçalho Accept: application/json) ou outra API — eu ajusto o código se preferir outra fonte.
+Quer que eu:
+
+Publique este arquivo diretamente no seu repositório adaptambiental-site (criar commit e servir via gh-pages), ou
+Gere uma versão em React, ou
+Adapte para usar outra API (ex.: icanhazdadjoke)?
