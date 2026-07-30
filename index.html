@@ -1,115 +1,58 @@
-<!doctype html>
-<html lang="pt-BR">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Gerador de Piadas Aleatórias</title>
-  <style>
-    :root{--bg:#0f1724;--card:#0b1220;--accent:#06b6d4;--text:#e6eef8}
-    body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(180deg,#071029 0%,#081426 100%);font-family:system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial}
-    .card{background:var(--card);color:var(--text);padding:2rem;border-radius:12px;box-shadow:0 8px 30px rgba(2,6,23,.6);max-width:720px;width:92%}
-    h1{margin:0 0 1rem;font-size:1.25rem}
-    .joke{font-size:1.1rem;line-height:1.6;margin:1rem 0;min-height:3.5rem}
-    .meta{font-size:.85rem;color:#9fb3c6;margin-bottom:.75rem}
-    .controls{display:flex;gap:.5rem;flex-wrap:wrap}
-    button{background:var(--accent);border:0;padding:.6rem .9rem;border-radius:8px;color:#042028;font-weight:600;cursor:pointer}
-    button.secondary{background:transparent;border:1px solid rgba(255,255,255,.06);color:var(--text)}
-    .small{font-size:.85rem;padding:.45rem .75rem;border-radius:6px}
-    .loader{display:inline-block;width:18px;height:18px;border:3px solid rgba(255,255,255,.12);border-top-color:var(--text);border-radius:50%;animation:spin .9s linear infinite;vertical-align:middle;margin-left:.5rem}
-    @keyframes spin{to{transform:rotate(360deg)}}
-    footer{font-size:.8rem;color:#9fb3c6;margin-top:1rem}
-  </style>
-</head>
-<body>
-  <main class="card" role="main">
-    <h1>Gerador de Piadas Aleatórias</h1>
-    <div class="meta">Fonte: JokeAPI (https://v2.jokeapi.dev)</div>
-    <div id="joke" class="joke">Clique em "Nova piada" para começar.</div>
-    <div class="controls">
-      <button id="newBtn">Nova piada</button>
-      <button id="copyBtn" class="secondary small">Copiar</button>
-      <button id="tweetBtn" class="secondary small">Compartilhar (Twitter)</button>
-      <label style="margin-left:auto;display:flex;gap:.5rem;align-items:center;color:#9fb3c6;font-size:.9rem">
-        <input id="nsfwToggle" type="checkbox" /> Mostrar NSFW
-      </label>
-    </div>
-    <footer id="status">Pronto.</footer>
-  </main>
+name: Mirror and deploy adaptambiental
 
-  <script>
-    const jokeEl = document.getElementById('joke');
-    const newBtn = document.getElementById('newBtn');
-    const copyBtn = document.getElementById('copyBtn');
-    const tweetBtn = document.getElementById('tweetBtn');
-    const statusEl = document.getElementById('status');
-    const nsfwToggle = document.getElementById('nsfwToggle');
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
 
-    async function fetchJoke() {
-      setLoading(true);
-      try {
-        const blacklist = nsfwToggle.checked ? '' : 'nsfw,religious,political,sexist,racist';
-        const url = `https://v2.jokeapi.dev/joke/Any?blacklistFlags=${encodeURIComponent(blacklist)}&lang=pt&type=single,twopart`;
-        const res = await fetch(url);
-        if (!res.ok) throw new Error('Falha ao buscar a piada: ' + res.status);
-        const data = await res.json();
+jobs:
+  fetch-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
 
-        let text = '';
-        if (data.error) {
-          throw new Error('API retornou erro.');
-        } else if (data.type === 'single') {
-          text = data.joke;
-        } else if (data.type === 'twopart') {
-          text = data.setup + '\n\n' + data.delivery;
-        } else {
-          text = JSON.stringify(data);
-        }
+      - name: Install wget
+        run: sudo apt-get update && sudo apt-get install -y wget
 
-        jokeEl.textContent = text;
-        statusEl.textContent = `Categoria: ${data.category} • ID: ${data.id}`;
-      } catch (err) {
-        jokeEl.textContent = 'Erro ao carregar piada. Tente novamente.';
-        statusEl.textContent = err.message;
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    }
+      - name: Mirror site with wget
+        run: |
+          rm -rf site
+          mkdir -p site
+          # Mirror the /lander page and its assets into site/www.adaptambiental.com.br
+          wget --mirror --convert-links --adjust-extension --page-requisites --no-parent https://www.adaptambiental.com.br/lander -P site
 
-    function setLoading(loading) {
-      if (loading) {
-        newBtn.disabled = true;
-        newBtn.innerHTML = 'Carregando <span class="loader" aria-hidden="true"></span>';
-        statusEl.textContent = 'Buscando piada...';
-      } else {
-        newBtn.disabled = false;
-        newBtn.textContent = 'Nova piada';
-      }
-    }
+      - name: Normalize output directory (move lander content to publish root)
+        run: |
+          # wget will create site/www.adaptambiental.com.br/lander
+          ROOT_DIR="site/www.adaptambiental.com.br"
+          LANDER_DIR="$ROOT_DIR/lander"
+          if [ -d "$LANDER_DIR" ]; then
+            echo "Found lander dir; moving its contents to publish root"
+            mkdir -p "$ROOT_DIR"
+            # move files (if any), preserve hidden files too
+            shopt -s dotglob || true
+            mv -f "$LANDER_DIR"/* "$ROOT_DIR/" || true
+            rm -rf "$LANDER_DIR"
+          fi
 
-    newBtn.addEventListener('click', fetchJoke);
+          # fallback in case wget structure differs
+          if [ -d "$ROOT_DIR" ]; then
+            PUBLISH_DIR="$ROOT_DIR"
+          else
+            PUBLISH_DIR=$(find site -maxdepth 2 -type d -name 'www.adaptambiental.com.br*' -print | head -n 1)
+            PUBLISH_DIR=${PUBLISH_DIR:-site}
+          fi
 
-    copyBtn.addEventListener('click', async () => {
-      const text = jokeEl.textContent.trim();
-      if (!text) return;
-      try {
-        await navigator.clipboard.writeText(text);
-        statusEl.textContent = 'Copiado para a área de transferência.';
-      } catch {
-        statusEl.textContent = 'Não foi possível copiar (navegador bloqueou).';
-      }
-    });
+          echo "PUBLISH_DIR=${PUBLISH_DIR}"
+          ls -la "$PUBLISH_DIR" || true
+          echo "www.adaptambiental.com.br" > "$PUBLISH_DIR/CNAME"
+          echo "$PUBLISH_DIR" > publish_dir.txt
 
-    tweetBtn.addEventListener('click', () => {
-      const text = jokeEl.textContent.trim();
-      const max = 280 - 24;
-      const tweet = encodeURIComponent(text.length > max ? text.slice(0, max - 1) + '…' : text);
-      const url = `https://twitter.com/intent/tweet?text=${tweet}&via=adaptambiental`;
-      window.open(url, '_blank', 'noopener');
-    });
-
-    // Busca a primeira piada ao carregar
-    fetchJoke();
-  </script>
-</body>
-</html>
-
+      - name: Deploy to gh-pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./site/www.adaptambiental.com.br
+          publish_branch: gh-pages
