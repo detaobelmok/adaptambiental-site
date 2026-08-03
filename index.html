@@ -123,6 +123,12 @@
     @media (prefers-reduced-motion: reduce){
       * { transition:none !important; animation:none !important; }
     }
+
+    /* Services cards tweaks */
+    #servicos .shadow-sm { box-shadow: 0 8px 20px rgba(18,22,24,0.06); }
+    #servicos .rounded { border-radius: 12px; }
+    #servicos h6 { font-size: 0.95rem; font-weight:600; }
+    #servicos p.small { font-size: 0.85rem; }
   </style>
 </head>
 <body>
@@ -215,20 +221,107 @@
     </section>
 
     <!-- Serviços (grade moderna) -->
-    <section id="servicos" class="mb-5">
-      <h3 class="mb-4">Serviços</h3>
-      <div class="row g-3">
-        <!-- cards... (mantidos como no original) -->
-        <div class="col-sm-6 col-md-4 col-lg-3">
-          <div class="p-3 rounded bg-white shadow-sm h-100">
-            <div class="d-flex align-items-center gap-3 mb-3">
-              <div class="service-ico"><i class="bi bi-file-earmark-text-fill text-success"></i></div>
-              <h5 class="mb-0">Licenciamento Ambiental</h5>
+    <section id="servicos" class="my-5">
+      <div class="container">
+        <h3 class="mb-4">Serviços</h3>
+        <div class="row g-3">
+          <!-- 1 -->
+          <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+            <div class="p-3 bg-white rounded shadow-sm h-100">
+              <div class="mb-2"><i class="bi bi-file-earmark-text-fill text-success"></i></div>
+              <h6 class="mb-1">Licenciamento Ambiental</h6>
+              <p class="small text-muted mb-0">Processos e acompanhamento junto aos órgãos competentes.</p>
             </div>
-            <p class="small text-muted">Processos e acompanhamento junto aos órgãos ambientais.</p>
+          </div>
+          <!-- 2 -->
+          <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+            <div class="p-3 bg-white rounded shadow-sm h-100">
+              <div class="mb-2"><i class="bi bi-gear-fill text-success"></i></div>
+              <h6 class="mb-1">Gestão Ambiental</h6>
+              <p class="small text-muted mb-0">Programas e políticas para gestão integrada ambiental.</p>
+            </div>
+          </div>
+          <!-- 3 -->
+          <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+            <div class="p-3 bg-white rounded shadow-sm h-100">
+              <div class="mb-2"><i class="bi bi-trash-fill text-success"></i></div>
+              <h6 class="mb-1">Gestão de Resíduos</h6>
+              <p class="small text-muted mb-0">Planos de gerenciamento e destinação adequada.</p>
+            </div>
+          </div>
+          <!-- 4 -->
+          <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+            <div class="p-3 bg-white rounded shadow-sm h-100">
+              <div class="mb-2"><i class="bi bi-water text-success"></i></div>
+              <h6 class="mb-1">Outorga de Recursos Hídricos</h6>
+              <p class="small text-muted mb-0">Regularização e outorga para uso de recursos hídricos.</p>
+            </div>
+          </div>
+          <!-- 5 -->
+          <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+            <div class="p-3 bg-white rounded shadow-sm h-100">
+              <div class="mb-2"><i class="bi bi-check-circle text-success"></i></div>
+              <h6 class="mb-1">Cadastro de Uso Insignificante</h6>
+              <p class="small text-muted mb-0">Adequação de atividades com impacto reduzido.</p>
+            </div>
+          </div>
+          <!-- 6 -->
+          <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+            <div class="p-3 bg-white rounded shadow-sm h-100">
+              <div class="mb-2"><i class="bi bi-tree text-success"></i></div>
+              <h6 class="mb-1">PRAD</h6>
+              <p class="small text-muted mb-0">Planos de recuperação de áreas degradadas.</p>
+            </div>
+          </div>
+          <!-- 7 -->
+          <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+            <div class="p-3 bg-white rounded shadow-sm h-100">
+              <div class="mb-2"><i class="bi bi-box-seam text-success"></i></div>
+              <h6 class="mb-1">PGRS / PGRCC</h6>
+              <p class="small text-muted mb-0">Planos de gerenciamento de resíduos.</p>
+            </div>
+          </div>
+          <!-- 8 -->
+          <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+            <div class="p-3 bg-white rounded shadow-sm h-100">
+              <div class="mb-2"><i class="bi bi-thermometer-half text-success"></i></div>
+              <h6 class="mb-1">Monitoramentos Ambientais</h6>
+              <p class="small text-muted mb-0">Monitoramento de água, solo, ar e ruído.</p>
+            </div>
+          </div>
+          <!-- 9 -->
+          <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+            <div class="p-3 bg-white rounded shadow-sm h-100">
+              <div class="mb-2"><i class="bi bi-mortarboard text-success"></i></div>
+              <h6 class="mb-1">Educação Ambiental</h6>
+              <p class="small text-muted mb-0">Programas educativos e capacitação.</p>
+            </div>
+          </div>
+          <!-- 10 -->
+          <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+            <div class="p-3 bg-white rounded shadow-sm h-100">
+              <div class="mb-2"><i class="bi bi-search text-success"></i></div>
+              <h6 class="mb-1">Auditorias</h6>
+              <p class="small text-muted mb-0">Auditorias técnicas e de conformidade.</p>
+            </div>
+          </div>
+          <!-- 11 -->
+          <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+            <div class="p-3 bg-white rounded shadow-sm h-100">
+              <div class="mb-2"><i class="bi bi-file-earmark-text text-success"></i></div>
+              <h6 class="mb-1">Regularização Ambiental</h6>
+              <p class="small text-muted mb-0">Acompanhamento de processos e condicionantes.</p>
+            </div>
+          </div>
+          <!-- 12 -->
+          <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+            <div class="p-3 bg-white rounded shadow-sm h-100">
+              <div class="mb-2"><i class="bi bi-tools text-success"></i></div>
+              <h6 class="mb-1">Consultoria para Obras</h6>
+              <p class="small text-muted mb-0">Suporte técnico durante projetos e obras.</p>
+            </div>
           </div>
         </div>
-        <!-- (restante do HTML mantido) -->
       </div>
     </section>
 
