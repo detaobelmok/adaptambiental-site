@@ -1,58 +1,291 @@
-name: Mirror and deploy adaptambiental
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adapt Ambiental - Consultoria Ambiental</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <h1>Adapt Ambiental</h1>
+            </div>
+            <nav class="nav">
+                <a href="#quem-somos">Quem Somos</a>
+                <a href="#servicos">Serviços</a>
+                <a href="#diferenciais">Diferenciais</a>
+                <a href="#setores">Setores</a>
+                <a href="#contato">Contato</a>
+            </nav>
+            <div class="menu-toggle" id="menuToggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </header>
 
-on:
-  workflow_dispatch:
-  push:
-    branches:
-      - main
+    <!-- Hero Section -->
+    <section class="hero">
+        <img src="images/hero-bg.jpg" alt="Hero Background" class="hero-image" onerror="this.style.display='none'">
+        <div class="hero-overlay">
+            <div class="hero-content">
+                <h2>Adapt Ambiental</h2>
+                <p>Soluções sustentáveis para seu negócio</p>
+                <a href="#contato" class="btn-primary">Fale Conosco</a>
+            </div>
+        </div>
+    </section>
 
-jobs:
-  fetch-and-deploy:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
+    <!-- Quem Somos -->
+    <section id="quem-somos" class="quem-somos">
+        <div class="container">
+            <span class="section-eyebrow">Sobre Nós</span>
+            <h2 class="section-title">Quem Somos</h2>
+            <p class="section-subtitle">Conheça a história e missão da Adapt Ambiental</p>
+            
+            <div class="quem-somos-grid">
+                <div class="quem-somos-text">
+                    <h3>Nossa Missão</h3>
+                    <p>A Adapt Ambiental é uma consultoria especializada em soluções ambientais inovadoras, dedicada a ajudar empresas de todos os tamanhos a alcançar seus objetivos de sustentabilidade.</p>
+                    <p>Com uma equipe de profissionais qualificados e experiência em diversos setores, oferecemos serviços personalizados que atendem às necessidades específicas de cada cliente.</p>
+                    
+                    <div class="valores">
+                        <div class="valor">
+                            <span class="valor-icon">✓</span>
+                            <span>Sustentabilidade</span>
+                        </div>
+                        <div class="valor">
+                            <span class="valor-icon">✓</span>
+                            <span>Inovação</span>
+                        </div>
+                        <div class="valor">
+                            <span class="valor-icon">✓</span>
+                            <span>Qualidade</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="quem-somos-image">
+                    <img src="images/quem-somos.jpg" alt="Quem Somos" onerror="this.style.display='none'">
+                </div>
+            </div>
+        </div>
+    </section>
 
-      - name: Install wget
-        run: sudo apt-get update && sudo apt-get install -y wget
+    <!-- Serviços -->
+    <section id="servicos" class="servicos">
+        <div class="container">
+            <span class="section-eyebrow">O Que Oferecemos</span>
+            <h2 class="section-title">Nossos Serviços</h2>
+            <p class="section-subtitle">Soluções completas para seus desafios ambientais</p>
+            
+            <div class="servicos-grid">
+                <div class="servico-card">
+                    <div class="servico-icon">🌱</div>
+                    <h3>Consultoria Ambiental</h3>
+                    <p>Diagnóstico e planejamento de estratégias sustentáveis para sua empresa.</p>
+                </div>
+                <div class="servico-card">
+                    <div class="servico-icon">♻️</div>
+                    <h3>Gestão de Resíduos</h3>
+                    <p>Soluções eficientes para o gerenciamento e reciclagem de resíduos.</p>
+                </div>
+                <div class="servico-card">
+                    <div class="servico-icon">💧</div>
+                    <h3>Recursos Hídricos</h3>
+                    <p>Análise e tratamento sustentável de água para sua operação.</p>
+                </div>
+            </div>
+        </div>
+    </section>
 
-      - name: Mirror site with wget
-        run: |
-          rm -rf site
-          mkdir -p site
-          # Mirror the /lander page and its assets into site/www.adaptambiental.com.br
-          wget --mirror --convert-links --adjust-extension --page-requisites --no-parent https://www.adaptambiental.com.br/lander -P site
+    <!-- Diferenciais -->
+    <section id="diferenciais" class="diferenciais">
+        <div class="container">
+            <span class="section-eyebrow">Por Que Escolher</span>
+            <h2 class="section-title">Nossos Diferenciais</h2>
+            <p class="section-subtitle">O que nos torna a melhor escolha para sua empresa</p>
+            
+            <div class="diferenciais-grid">
+                <div class="diferencial">
+                    <h3>Experiência Comprovada</h3>
+                    <p>Anos de atuação no mercado ambiental com resultados reconhecidos.</p>
+                </div>
+                <div class="diferencial">
+                    <h3>Equipe Especializada</h3>
+                    <p>Profissionais certificados e em constante atualização.</p>
+                </div>
+                <div class="diferencial">
+                    <h3>Soluções Personalizadas</h3>
+                    <p>Cada projeto é único e merece uma abordagem específica.</p>
+                </div>
+            </div>
+        </div>
+    </section>
 
-      - name: Normalize output directory (move lander content to publish root)
-        run: |
-          # wget will create site/www.adaptambiental.com.br/lander
-          ROOT_DIR="site/www.adaptambiental.com.br"
-          LANDER_DIR="$ROOT_DIR/lander"
-          if [ -d "$LANDER_DIR" ]; then
-            echo "Found lander dir; moving its contents to publish root"
-            mkdir -p "$ROOT_DIR"
-            # move files (if any), preserve hidden files too
-            shopt -s dotglob || true
-            mv -f "$LANDER_DIR"/* "$ROOT_DIR/" || true
-            rm -rf "$LANDER_DIR"
-          fi
+    <!-- Setores -->
+    <section id="setores" class="setores">
+        <div class="container">
+            <span class="section-eyebrow">Atuação</span>
+            <h2 class="section-title">Setores Atendidos</h2>
+            <p class="section-subtitle">Experiência em diversos segmentos da indústria</p>
+            
+            <div class="setores-grid">
+                <div class="setor-card">
+                    <div class="setor-icon">🏭</div>
+                    <p>Indústria</p>
+                </div>
+                <div class="setor-card">
+                    <div class="setor-icon">🏢</div>
+                    <p>Comércio</p>
+                </div>
+                <div class="setor-card">
+                    <div class="setor-icon">🏗️</div>
+                    <p>Construção</p>
+                </div>
+                <div class="setor-card">
+                    <div class="setor-icon">🌾</div>
+                    <p>Agronegócio</p>
+                </div>
+            </div>
+        </div>
+    </section>
 
-          # fallback in case wget structure differs
-          if [ -d "$ROOT_DIR" ]; then
-            PUBLISH_DIR="$ROOT_DIR"
-          else
-            PUBLISH_DIR=$(find site -maxdepth 2 -type d -name 'www.adaptambiental.com.br*' -print | head -n 1)
-            PUBLISH_DIR=${PUBLISH_DIR:-site}
-          fi
+    <!-- Fundamentos -->
+    <section class="fundamentos">
+        <div class="container">
+            <span class="section-eyebrow">Nossa Base</span>
+            <h2 class="section-title">Fundamentos</h2>
+            <p class="section-subtitle">Os princípios que guiam nosso trabalho</p>
+            
+            <div class="fundamentos-grid">
+                <div class="fundamento">
+                    <h4>Compliance</h4>
+                    <p>Atendimento total às legislações ambientais vigentes.</p>
+                </div>
+                <div class="fundamento">
+                    <h4>Eficiência</h4>
+                    <p>Otimização de processos com redução de impacto ambiental.</p>
+                </div>
+                <div class="fundamento">
+                    <h4>Inovação</h4>
+                    <p>Implementação de tecnologias sustentáveis e modernas.</p>
+                </div>
+            </div>
+        </div>
+    </section>
 
-          echo "PUBLISH_DIR=${PUBLISH_DIR}"
-          ls -la "$PUBLISH_DIR" || true
-          echo "www.adaptambiental.com.br" > "$PUBLISH_DIR/CNAME"
-          echo "$PUBLISH_DIR" > publish_dir.txt
+    <!-- Contato -->
+    <section id="contato" class="contato">
+        <div class="container">
+            <span class="section-eyebrow">Fale Conosco</span>
+            <h2 class="section-title">Entre em Contato</h2>
+            <p class="section-subtitle">Estamos prontos para ajudar seu negócio</p>
+            
+            <div class="contato-grid">
+                <div class="contato-form">
+                    <h3>Envie uma Mensagem</h3>
+                    <form id="formContato">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="nome">Nome *</label>
+                                <input type="text" id="nome" name="nome" required>
+                                <span class="error" id="erroNome"></span>
+                            </div>
+                            <div class="form-group">
+                                <label for="empresa">Empresa</label>
+                                <input type="text" id="empresa" name="empresa">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="email">E-mail *</label>
+                                <input type="email" id="email" name="email" required>
+                                <span class="error" id="erroEmail"></span>
+                            </div>
+                            <div class="form-group">
+                                <label for="telefone">Telefone</label>
+                                <input type="tel" id="telefone" name="telefone">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="mensagem">Mensagem *</label>
+                            <textarea id="mensagem" name="mensagem" rows="4" required></textarea>
+                            <span class="error" id="erroMensagem"></span>
+                        </div>
+                        <div id="formStatus" class="form-status"></div>
+                        <button type="submit" class="btn-primary btn-submit" id="btnSubmit">Enviar Mensagem</button>
+                    </form>
+                </div>
+                
+                <div class="contato-info">
+                    <div class="info-card">
+                        <div class="info-icon">📞</div>
+                        <h4>Telefone</h4>
+                        <div class="info-value">(21) 9 6019-0309</div>
+                        <p class="info-desc">Segunda a Sexta, 9h às 18h</p>
+                        <a href="tel:+5521960190309" class="info-link">Ligar Agora</a>
+                    </div>
+                    <div class="info-card">
+                        <div class="info-icon">✉️</div>
+                        <h4>E-mail</h4>
+                        <div class="info-value">contato@adaptambiental.com.br</div>
+                        <p class="info-desc">Resposta em até 24h</p>
+                        <a href="mailto:contato@adaptambiental.com.br" class="info-link">Enviar E-mail</a>
+                    </div>
+                    <div class="info-card">
+                        <div class="info-icon">📍</div>
+                        <h4>Localização</h4>
+                        <div class="info-value">Rio de Janeiro, RJ</div>
+                        <p class="info-desc">Atendimento para todo o Brasil</p>
+                        <a href="#" class="info-link">Ver Mapa</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-      - name: Deploy to gh-pages
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./site/www.adaptambiental.com.br
-          publish_branch: gh-pages
+    <!-- WhatsApp Button -->
+    <div class="whatsapp-btn" onclick="window.open('https://wa.me/5521960190309', '_blank')">
+        <div class="pulse"></div>
+        <svg viewBox="0 0 24 24" fill="white">
+            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.67-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.076 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421-7.403h-.004a9.87 9.87 0 00-4.928 1.227l-.36.214-3.75-.988.998 3.65-.235.364a9.861 9.861 0 -1.51-13.902 9.868 9.868 0 0 1 6.175 1.835l.358.214 3.75-.988-.998 3.65.235.364a9.876 9.876 0 01-1.488 6.975"/>
+        </svg>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h4>Adapt Ambiental</h4>
+                    <p>Consultoria ambiental inovadora focada em sustentabilidade e resultados práticos para sua empresa.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Links Rápidos</h4>
+                    <ul>
+                        <li><a href="#quem-somos">Quem Somos</a></li>
+                        <li><a href="#servicos">Serviços</a></li>
+                        <li><a href="#diferenciais">Diferenciais</a></li>
+                        <li><a href="#contato">Contato</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Contato</h4>
+                    <p>(21) 9 6019-0309</p>
+                    <p>contato@adaptambiental.com.br</p>
+                    <p>Rio de Janeiro, RJ</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Adapt Ambiental. Todos os direitos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
