@@ -1,47 +1,19 @@
-name: Mirror and deploy adaptambiental
+name: Deploy
 
 on:
-  workflow_dispatch:
   push:
     branches:
       - main
 
 jobs:
-  fetch-and-deploy:
+  deploy:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
 
-      - name: Install wget
-        run: sudo apt-get update && sudo apt-get install -y wget
+      - uses: actions/checkout@v4
 
-      - name: Mirror site with wget
-        run: |
-          rm -rf site
-          mkdir -p site
-          # Mirror the site into site/www.adaptambiental.com.br
-          wget --mirror --convert-links --adjust-extension --page-requisites --no-parent https://www.adaptambiental.com.br/ -P site
-
-      - name: Normalize output directory
-        run: |
-          # wget will create site/www.adaptambiental.com.br/ by hostname
-          if [ -d "site/www.adaptambiental.com.br" ]; then
-            echo "found mirrored dir"
-            PUBLISH_DIR="site/www.adaptambiental.com.br"
-          else
-            # fallback to first directory inside site/
-            PUBLISH_DIR=$(find site -maxdepth 1 -type d ! -path site -print | head -n 1)
-            PUBLISH_DIR=${PUBLISH_DIR:-site}
-          fi
-          echo "PUBLISH_DIR=${PUBLISH_DIR}"
-          ls -la "$PUBLISH_DIR"
-          echo "www.adaptambiental.com.br" > "$PUBLISH_DIR/CNAME"
-          echo "$PUBLISH_DIR" > publish_dir.txt
-
-      - name: Deploy to gh-pages
-        uses: peaceiris/actions-gh-pages@v3
+      - uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./site/www.adaptambiental.com.br
-          publish_branch: gh-pages
+          publish_dir: .
