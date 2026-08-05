@@ -120,6 +120,9 @@ body {
     align-items: center;
     justify-content: center;
     text-align: center;
+    background-image: url('images/banner-main-desfocado-1200.webp');
+    background-size: cover;
+    background-position: center;
 }
 .hero picture {
     position: absolute;
@@ -133,7 +136,7 @@ body {
     height: 100%;
     object-fit: contain;
     object-position: center 50%;
-    z-index: 1;
+    z-index: 2;
 }
 
 
