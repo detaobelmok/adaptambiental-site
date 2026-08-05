@@ -42,6 +42,7 @@ body {
     z-index: 100;
     background: var(--white);
     box-shadow: var(--shadow-sm);
+    margin-top: 425px;
 }
 
 .header .container {
