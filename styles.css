@@ -29,6 +29,8 @@ body {
     line-height: 1.6;
     background-color: var(--white);
     overflow-x: hidden;
+    margin: 0;
+    padding: 0;
 }
 
 .container {
@@ -123,6 +125,8 @@ line-height: 0;
 .hero picture {
 display: block;
 width: 100%;
+margin: 0;
+padding: 0;
 }
 
 .hero-image {
@@ -130,6 +134,8 @@ display: block;
 width: 100%;
 height: auto;
 max-width: 100%;
+margin: 0;
+padding: 0;
 }
 
 .hero-overlay {
